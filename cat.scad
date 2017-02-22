@@ -1,4 +1,7 @@
-$xshift = 10;
+$xshift = 70;
+
+translate([-60,-55,-25])
+    cube([120,1,50]);
 
 translate([$xshift-5,20,0])
     union(){
@@ -37,27 +40,30 @@ translate([$xshift-5,20,0])
         }
     };
 
-translate([($xshift-73),-1,0])
+translate([($xshift-73),-1,0]){
     //body
     union(){
-    hull(){
+        hull(){
         //neck
-    translate([50,10,0]) rotate([0,90,32])
-        cylinder(h=15,r1=16,r2=14);
+        translate([50,10,0]) rotate([0,90,32])
+            cylinder(h=15,r1=16,r2=14);
         //torso
-    translate([37,2,0])
-        sphere(22);
-    }
-    hull(){
         translate([37,2,0])
             sphere(22);
-        translate([-35,0,0])
-            sphere(25);
-        translate([-12,-5,0]) rotate([0,90,0])
-            cylinder(h=1,r=25);
+        }
+        hull(){
+            translate([37,2,0])
+                sphere(22);
+            translate([-35,0,0])
+                sphere(25);
+            translate([-12,-5,0]) rotate([0,90,0])
+                cylinder(h=1,r=25);
+        }
     }
-    }
-
+    // support plate
+    translate([-12,-54,-15])
+        cube([1,30,30]);
+}
 //tail
 union(){
     translate([($xshift-180),50,0])
@@ -76,37 +82,39 @@ union(){
 
 
 for(x=[-10,10]){
-    //rear legs
+    //rear thighs
     union(){
-    hull(){
-    translate([$xshift-115,-15,x]) rotate([90-1.5*x,0,-20])
-        cylinder(h=25,r1=14,r2=3);
-    translate([$xshift-123,-37,1.6*x])
-        sphere(r=4);
-    }
-    hull(){
-    translate([$xshift-115,-15,x]) rotate([90-1.5*x,0,-20])
-        cylinder(h=25,r1=14,r2=3);
-    translate([$xshift-109,-2,0])
-        sphere(24);
-    }
-    }
-    //below the knees
-    union(){
-    hull(){
+        hull(){
+        translate([$xshift-115,-15,x]) rotate([90-1.5*x,0,-20])
+            cylinder(h=25,r1=14,r2=3);
         translate([$xshift-123,-37,1.6*x])
             sphere(r=4);
-        translate([$xshift-116,-55,1.7*x])
-            sphere(r=3);
+        }
+        hull(){
+        translate([$xshift-115,-15,x]) rotate([90-1.5*x,0,-20])
+            cylinder(h=25,r1=14,r2=3);
+        translate([$xshift-109,-2,0])
+            sphere(24);
+        }
     }
-    hull(){
-        translate([$xshift-116,-55,1.7*x])
-            sphere(r=3);
-        translate([$xshift-114,-56,1.7*x]) 
-            resize([8,4,5]) 
-            rotate([0,0,0])
-            sphere(r=3);
-    }
+    //below the knees
+    $tibia = -52;
+    union(){
+        hull(){
+            translate([$xshift-123,-37,1.6*x])
+                sphere(r=4);
+            translate([$xshift-116,$tibia,1.7*x])
+                sphere(r=3);
+        }
+        hull(){
+            translate([$xshift-116,$tibia,1.7*x])
+                sphere(r=3);
+            //feet
+            translate([$xshift-114,$tibia-1,1.7*x]) 
+                resize([8,4,5]) 
+                rotate([0,0,0])
+                sphere(r=3);
+        }
     }
     
     //front legs
@@ -124,11 +132,11 @@ for(x=[-10,10]){
     }
     //front paws
     hull(){
-    translate([$xshift-20,-52,2*x]) 
+    translate([$xshift-20,-53,2*x]) 
         resize([10,4,6]) 
         rotate([0,0,-30])
         sphere(r=3);
-    translate([$xshift-23,-51,1.9*x])
+    translate([$xshift-23,-52,1.9*x])
         sphere(3);
     }
 }
