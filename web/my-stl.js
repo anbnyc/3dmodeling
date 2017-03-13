@@ -45,7 +45,7 @@ function init(){
 	document.body.appendChild( renderer.domElement );
 
 	var loader=new THREE.STLLoader();
-	loader.load('./eiffel2.stl', function (geometry){
+	loader.load('../openscad/eiffel1.stl', function (geometry){
 		var material=new THREE.MeshLambertMaterial( { color: 0x448844 } );
 
 		mesh=new THREE.Mesh(geometry, material);
