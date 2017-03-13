@@ -2,11 +2,19 @@
 // http://www.diale.org/javascript3knot.html
 // http://davidscottlyons.com/threejs/presentations/frontporch14/#render-loop
 // https://threejs.org/examples/webgl_loader_stl.html
+// https://github.com/mrdoob/three.js/blob/master/examples/js/Detector.js
 
 var scene, camera, renderer, mesh, plane;
 var raf;
 
-init();
+var canvas = document.createElement( 'canvas' );
+var errortext = document.createTextNode("Sorry, this browser doesn't support WebGL.");
+
+if(window.WebGLRenderingContext && canvas.getContext('webgl')){
+	init();
+} else {
+	document.body.appendChild(errortext);
+}
 
 function init(){
 	scene=new THREE.Scene();
@@ -15,10 +23,12 @@ function init(){
 
 	cameraTarget = new THREE.Vector3( 0, 65, 0 );
 
-	renderer=new THREE.WebGLRenderer(); //{ antialias: true }
+	renderer=new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+	renderer.setClearColor(0x808080, 1);
+	document.body.appendChild( renderer.domElement );
 
 	scene.add( new THREE.HemisphereLight( 0x443333, 0x111122 ) );
 	scene.add(new THREE.AmbientLight(0x736F6E));
@@ -42,10 +52,10 @@ function init(){
 	plane.receiveShadow = true;
 	scene.add( plane );
 
-	document.body.appendChild( renderer.domElement );
+	renderer.render(scene, camera);
 
 	var loader=new THREE.STLLoader();
-	loader.load('../openscad/eiffel1.stl', function (geometry){
+	loader.load('./openscad/eiffel2.stl', function (geometry){
 		var material=new THREE.MeshLambertMaterial( { color: 0x448844 } );
 
 		mesh=new THREE.Mesh(geometry, material);
@@ -60,18 +70,17 @@ function init(){
 			cancelAnimationFrame(raf);
 			animate();	
 		},7000);
-		animateTemp();
+		animateZoom();
 	});
 }
 
-function animateTemp(){
-	raf = requestAnimationFrame(animateTemp);
+function animateZoom(){
+	raf = requestAnimationFrame(animateZoom);
 	var timer=Date.now();
 	camera.position.z -= Math.pow(10,-12)*timer;
 	camera.position.y -= Math.pow(10,-12)*timer
 	camera.lookAt(cameraTarget);
 	renderer.render(scene, camera);
-	renderer.setClearColor(0x808080, 1);
 }
 
 function animate(){
@@ -85,5 +94,4 @@ function render(){
 	plane.rotation.z += (Math.pow(10,-11)*timer)/2;
 	camera.lookAt(cameraTarget);
 	renderer.render(scene, camera);
-	renderer.setClearColor(0x808080, 1);
 }
