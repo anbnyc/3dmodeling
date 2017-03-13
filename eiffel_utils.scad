@@ -1,10 +1,12 @@
-$w = .5;
+$w = .75;
 $id = [0,0,0];
 
 module leg_segment(start,vector,l1,l2){
 translate(start){
     //bottom
     horizontal_plane(l1);
+
+/*(1)
     //top
     translate(vector){
         horizontal_plane(l2);
@@ -20,11 +22,15 @@ translate(start){
     $6 = vector+[l2-$w,l2-$w,0];
     $7 = vector+[0,l2-$w,0];
     
+/*(2)
+    
     //vertical columns
     diagonal_bar($0,$4);
     diagonal_bar($1,$5);
     diagonal_bar($3,$7);
     diagonal_bar($2,$6);
+
+/*(3)
    
     //cross columns
     diagonal_bar($0,$5);
@@ -38,6 +44,9 @@ translate(start){
     
     diagonal_bar($3,$6);
     diagonal_bar($2,$7);
+
+*/
+
 }   
 }
 
@@ -76,8 +85,8 @@ module leg(n,start,vector,ldelta,scale){
     }
 }
 
-/*
-for(r=[0]){
-    rotate([0,0,0]) leg(5,[0,0,0],[1,1,6],.95,10);
-}
-*/
+
+//(4a) for(r=[0,1,2,3]){ rotate([0,0,r*90]) translate([-20,-20,0]){
+    leg_segment([0,0,0],[2,3,6],10,10);
+//(5*)    leg(3,[0,0,0],[2,2,6],1,10);
+//(4b) }}

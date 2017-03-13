@@ -4,13 +4,14 @@
 // https://threejs.org/examples/webgl_loader_stl.html
 
 var scene, camera, renderer, mesh, plane;
+var raf;
 
 init();
 
 function init(){
 	scene=new THREE.Scene();
 	camera=new THREE.PerspectiveCamera(10, window.innerWidth / window.innerHeight, 1, 100000);
-	camera.position.set(0,200,1000);
+	camera.position.set(500,1000,2000);
 
 	cameraTarget = new THREE.Vector3( 0, 65, 0 );
 
@@ -35,6 +36,7 @@ function init(){
 		new THREE.MeshPhongMaterial( { color: 0x808080, specular: 0x101010 } )
 	);
 	plane.rotation.x = -Math.PI/2;
+	plane.rotation.z = 0;
 	plane.position.y = -0.5;
 	plane.castShadow = false;
 	plane.receiveShadow = true;
@@ -43,17 +45,33 @@ function init(){
 	document.body.appendChild( renderer.domElement );
 
 	var loader=new THREE.STLLoader();
-	loader.load('../eiffel.stl', function (geometry){
+	loader.load('../eiffel1.stl', function (geometry){
 		var material=new THREE.MeshLambertMaterial( { color: 0x448844 } );
 
 		mesh=new THREE.Mesh(geometry, material);
 		mesh.rotation.x = -Math.PI/2;
+		mesh.rotation.z = 0;
 		mesh.castShadow = true;
 		mesh.receiveShadow = false;
 		
 		scene.add(mesh);
-		animate();
+
+		setTimeout(function(){
+			cancelAnimationFrame(raf);
+			animate();	
+		},7000);
+		animateTemp();
 	});
+}
+
+function animateTemp(){
+	raf = requestAnimationFrame(animateTemp);
+	var timer=Date.now();
+	camera.position.z -= Math.pow(10,-12)*timer;
+	camera.position.y -= Math.pow(10,-12)*timer
+	camera.lookAt(cameraTarget);
+	renderer.render(scene, camera);
+	renderer.setClearColor(0x808080, 1);
 }
 
 function animate(){
@@ -63,14 +81,9 @@ function animate(){
 
 function render(){
 	var timer=Date.now() * 0.001;
-	r = 500;
-	mesh.rotation.z = Math.PI/4*timer;
-	plane.rotation.z = Math.PI/4*timer;
+	mesh.rotation.z += (Math.pow(10,-11)*timer)/2;
+	plane.rotation.z += (Math.pow(10,-11)*timer)/2;
 	camera.lookAt(cameraTarget);
 	renderer.render(scene, camera);
 	renderer.setClearColor(0x808080, 1);
-}
-
-function render2(){
-
 }
